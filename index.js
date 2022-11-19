@@ -1,0 +1,68 @@
+// import express and dotenv package installed above
+const express = require("express");
+const dotenv = require("dotenv");
+
+const getAstraClient = require("./utils/astraClient");
+
+const cors = require("cors");
+const userRoute = require("./routes/user");
+const authRoute = require("./routes/auth");
+const productRoute = require("./routes/product");
+const cartRoute = require("./routes/cart");
+const orderRoute = require("./routes/order");
+const stripeRoute = require("./routes/stripe");
+
+
+
+(async () => {
+    const app = express()
+    app.use(cors());
+    app.use(express.json());
+    app.use(express.urlencoded({extended: false}))
+
+    // enable env varibales for .env file
+    dotenv.config()
+    app.listen(5001, () => {
+        console.log("Server running port: 5001")
+    })
+    
+    // a basic index route
+    app.get('/', (req,res)=>{
+        res.send("You're in the index page")
+    })
+    
+    
+    // create an Astra DB client
+    const astraClient = await getAstraClient()
+    app.use("/api/auth", authRoute(astraClient));
+    app.use("/api/users", userRoute(astraClient));
+    app.use("/api/products", productRoute(astraClient));
+    app.use("/api/carts", cartRoute(astraClient));
+    app.use("/api/orders", orderRoute(astraClient));
+    app.use("/api/checkout", stripeRoute);
+    
+    const users = astraClient.namespace(process.env.ASTRA_DB_KEYSPACE).collection("users")
+
+    // get all documents
+    app.get('/users', async (req, res) => {
+        const blogs = await users.find({})
+        return res.json(blogs)
+    })
+
+    // post route
+    app.post('/newUser', async(req, res) => {
+        const {username, password, email, phone} = req.body
+        console.log(req.body)
+        const newUser = await users.create({
+            username: username,
+            password: password,
+            email: email,
+            phone: phone,
+            point: 0
+        })
+            // return a success msg with the new doc 
+        return res.json({data: newUser, msg: 'user created successfully'})
+    })
+
+    module.exports = app;
+})();
