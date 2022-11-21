@@ -9,6 +9,20 @@ const router = require('express').Router();
 module.exports = function(astraClient) {
     const collection = astraClient.namespace(process.env.ASTRA_DB_KEYSPACE).collection("orders")
 
+    const convertArray = (collection) => {
+        var result = []
+        for (const property in collection) {
+            var temp = {}
+            temp["_id"] = property
+
+            for (const property2 in collection[property]) {
+                temp[property2] = collection[property][property2]
+            }
+            result.push(temp)
+        }
+        return result
+    }
+
     //CREATE
     router.post("/", verifyToken, async (req, res) => {
         const data = req.body;
@@ -52,8 +66,15 @@ module.exports = function(astraClient) {
     //GET USER ORDERS
     router.get("/find/:userId", verifyTokenAndAuthorize, async (req, res) => {
         try {
-            const orders = await Order.find({ userId: req.params.userId });
-            return res.status(200).json(orders);
+            const orders = await collection.find({ 
+                userId: {
+                    $eq: req.params.userId 
+                }
+            });
+
+            var result = convertArray(orders)
+
+            return res.status(200).json(result);
         } catch (err) {
             return res.status(500).json(err);
         }
