@@ -41,9 +41,9 @@ module.exports = function(astraClient) {
     });
 
     //GET USER
-    router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
+    router.get("/find/:uid", verifyTokenAndAdmin, async (req, res) => {
         try {
-            const user = await collection.findById(req.params.id);
+            const user = await collection.findById(req.params.uid);
             const { password, ...others } = user._doc;
             return res.status(200).json(others);
         } catch (err) {

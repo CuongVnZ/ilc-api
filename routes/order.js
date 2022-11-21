@@ -64,15 +64,15 @@ module.exports = function(astraClient) {
     });
 
     //GET USER ORDERS
-    router.get("/find/:userId", verifyTokenAndAuthorize, async (req, res) => {
+    router.get("/find/:uid", verifyTokenAndAuthorize, async (req, res) => {
         try {
             const orders = await collection.find({ 
                 userId: {
-                    $eq: req.params.userId 
+                    $eq: req.params.uid 
                 }
             });
 
-            var result = convertArray(orders)
+            var result = convertArray(orders.data)
 
             return res.status(200).json(result);
         } catch (err) {
