@@ -56,7 +56,7 @@ module.exports = function(astraClient) {
     //DELETE
     router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
         try {
-            const deletedOrder = await Order.findByIdAndDelete(req.params.id);
+            const deletedOrder = await collection.delete(req.params.id);
             return res.status(200).json("Order has been deleted...", deletedOrder);
         } catch (err) {
             return res.status(500).json(err);
