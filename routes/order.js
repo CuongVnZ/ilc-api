@@ -74,6 +74,10 @@ module.exports = function(astraClient) {
 
             var result = convertArray(orders.data)
 
+            result.sort((a,b) => {
+                return new Date(b.createdAt) - new Date(a.createdAt)
+            })
+
             return res.status(200).json(result);
         } catch (err) {
             return res.status(500).json(err);

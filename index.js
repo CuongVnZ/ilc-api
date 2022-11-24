@@ -8,7 +8,6 @@ const cors = require("cors");
 const userRoute = require("./routes/user");
 const authRoute = require("./routes/auth");
 const productRoute = require("./routes/product");
-const cartRoute = require("./routes/cart");
 const orderRoute = require("./routes/order");
 const stripeRoute = require("./routes/stripe");
 
@@ -37,7 +36,6 @@ const stripeRoute = require("./routes/stripe");
     app.use("/api/auth", authRoute(astraClient));
     app.use("/api/users", userRoute(astraClient));
     app.use("/api/products", productRoute(astraClient));
-    app.use("/api/carts", cartRoute(astraClient));
     app.use("/api/orders", orderRoute(astraClient));
     app.use("/api/checkout", stripeRoute);
     
