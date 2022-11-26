@@ -9,6 +9,7 @@ router.post("/payment", (req, res) => {
         amount: req.body.amount,
         currency: "usd"
     }, (stripeErr, stripeRes) => {
+        console.log((stripeErr, stripeRes))
         if (stripeErr) {
             console.log(stripeErr)
             return res.status(500).json(stripeErr);
