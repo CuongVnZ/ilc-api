@@ -6,7 +6,7 @@ router.post("/payment", (req, res) => {
     //console.log(process.env.STRIPE_KEY)
     stripe.charges.create({
         source: req.body.tokenId,
-        amount: req.body.amount,
+        amount: Math.floor(req.body.amount),
         currency: "usd"
     }, (stripeErr, stripeRes) => {
         console.log((stripeErr, stripeRes))
