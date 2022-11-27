@@ -7,15 +7,11 @@ module.exports = function(astraClient) {
 
     //REGISTER
     router.post("/register", async (req, res) => {
-
-        const newUser = {
-            username: req.body.username,
-            email: req.body.email,
-            password: CryptoJS.AES.encrypt(
-                req.body.password, 
-                process.env.PASS_SEC
-            ).toString()
-        };
+        var newUser = req.body
+        newUser.password = CryptoJS.AES.encrypt(
+            newUser.password, 
+            process.env.PASS_SEC
+        ).toString()
 
         try {
             const savedUser = await collection.create(newUser);

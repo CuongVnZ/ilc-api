@@ -40,7 +40,7 @@ module.exports = function(astraClient) {
     //UPDATE
     router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
         try {
-            const updatedOrder = await Order.findByIdAndUpdate(
+            const updatedOrder = await collection.update(
                 req.params.id, 
                 {
                     $set: req.body
@@ -89,18 +89,8 @@ module.exports = function(astraClient) {
         try {
             const orders = await collection.find();
 
-            var data = orders.data
-            var result = []
-            for (const property in data) {
-                //console.log(`${property}: ${data[property]}`);
-                var temp = {}
-                temp["_id"] = property
-    
-                for (const property2 in data[property]) {
-                    temp[property2] = data[property][property2]
-                }
-                result.push(temp)
-            }
+            var result = convertArray(orders.data)
+            
             result.sort((a,b) => {
                 return new Date(b.createdAt) - new Date(a.createdAt)
             })
