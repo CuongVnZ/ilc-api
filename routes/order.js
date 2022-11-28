@@ -84,6 +84,18 @@ module.exports = function(astraClient) {
         }
     });
 
+    //GET ORDER
+    router.get("/:id", verifyTokenAndAuthorize, async (req, res) => {
+        try {
+            var _id = req.params.id
+            const order = await collection.find(req.params.id);
+            order._id = _id
+            return res.status(200).json(order);
+        } catch (err) {
+            return res.status(500).json(err);
+        }
+    });
+
     //GET ALL ORDERS
     router.get("/", verifyTokenAndAdmin, async (req, res) => {
         try {
