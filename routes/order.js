@@ -40,13 +40,7 @@ module.exports = function(astraClient) {
     //UPDATE
     router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
         try {
-            const updatedOrder = await collection.update(
-                req.params.id, 
-                {
-                    $set: req.body
-                }, 
-                { new: true }
-            );
+            const updatedOrder = await collection.update(req.body);
             return res.status(200).json(updatedOrder);
         } catch (err) {
             return res.status(500).json(err);
