@@ -58,7 +58,7 @@ module.exports = function(astraClient) {
     });
 
     //GET USER ORDERS
-    router.get("/find/:uid", verifyTokenAndAuthorize, async (req, res) => {
+    router.get("/findByUser/:uid", verifyTokenAndAuthorize, async (req, res) => {
         try {
             const orders = await collection.find({ 
                 userId: {
@@ -79,7 +79,7 @@ module.exports = function(astraClient) {
     });
 
     //GET ORDER
-    router.get("/:id", verifyTokenAndAuthorize, async (req, res) => {
+    router.get("/findById/:id", verifyTokenAndAuthorize, async (req, res) => {
         try {
             var _id = req.params.id
             const order = await collection.find(req.params.id);
@@ -120,8 +120,8 @@ module.exports = function(astraClient) {
             var orders = result.data
 
             if(productId) {
-                for (const property in orders) {
-                    var order = orders[property]
+                for (const orderId in orders) {
+                    var order = orders[orderId]
     
                     var month = new Date(order.createdAt).getMonth()
                     var skip = false
@@ -149,23 +149,25 @@ module.exports = function(astraClient) {
 
                 }
             }else{
-                for (const property in orders) {
-                    var order = orders[property]
-    
+                for (const orderId in orders) {
+                    var order = orders[orderId]
+
                     var month = new Date(order.createdAt).getMonth()
                     var skip = false
-                    
+                
                     arr.forEach((value, index) => {
                         if (value._id == month) {
-                            value.total += order.amount
+                            value.total = Math.round((value.total + order.amount)*100)/100
                             skip = true
                         }
+                        
                     })
                     if(!skip && !isNaN(month)){
-                        var value = {}
-                        value._id = month
-                        value.total = order.amount
-                        arr.push(value)
+                        Math.round(order.amount*100)/100
+                        arr.push({
+                            _id: month,
+                            total: Math.round(order.amount*100)/100
+                        })
                     }
 
                 }
@@ -178,6 +180,7 @@ module.exports = function(astraClient) {
             console.log("[INFO] Received /orders/income get request from ", req.get('origin'))
             return res.status(200).json(arr);
         } catch (err) {
+            console.log(err)
             return res.status(500).json(err);
         }
     });
