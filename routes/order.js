@@ -153,6 +153,7 @@ module.exports = function(astraClient) {
                     var order = orders[orderId]
 
                     var month = new Date(order.createdAt).getMonth()
+                    console.log(month, order.createdAt, order.amount)
                     var skip = false
                 
                     arr.forEach((value, index) => {
@@ -174,7 +175,7 @@ module.exports = function(astraClient) {
             }
 
             arr.sort((a,b) => {
-                return new Date(a._id) - new Date(b._id)
+                return new Date(b._id) - new Date(a._id)
             })
 
             console.log("[INFO] Received /orders/income get request from ", req.get('origin'))
