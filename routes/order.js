@@ -175,7 +175,7 @@ module.exports = function(astraClient) {
             }
 
             arr.sort((a,b) => {
-                return new Date(b._id) - new Date(a._id)
+                return b._id - a._id
             })
 
             console.log("[INFO] Received /orders/income get request from ", req.get('origin'))

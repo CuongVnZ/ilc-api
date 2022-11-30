@@ -103,7 +103,7 @@ module.exports = function(astraClient) {
                 }
             }
             arr.sort((a,b) => {
-                return new Date(b._id) - new Date(a._id)
+                return b._id - a._id
             })
             console.log("[INFO] Received /users/stats get request from ", req.get('origin'))
             return res.status(200).json(arr);
