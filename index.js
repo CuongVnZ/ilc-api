@@ -39,19 +39,19 @@ const stripeRoute = require("./routes/stripe");
     app.use("/api/orders", orderRoute(astraClient));
     app.use("/api/checkout", stripeRoute);
     
-    const users = astraClient.namespace(process.env.ASTRA_DB_KEYSPACE).collection("users")
+    const testCollection = astraClient.namespace(process.env.ASTRA_DB_KEYSPACE).collection("test")
 
     // get all documents
-    app.get('/users', async (req, res) => {
-        const blogs = await users.find({})
+    app.get('/test', async (req, res) => {
+        const blogs = await testCollection.find({})
         return res.json(blogs)
     })
 
     // post route
-    app.post('/newUser', async(req, res) => {
+    app.post('/test', async(req, res) => {
         const {username, password, email, phone} = req.body
         console.log(req.body)
-        const newUser = await users.create({
+        const newUser = await testCollection.create({
             username: username,
             password: password,
             email: email,
