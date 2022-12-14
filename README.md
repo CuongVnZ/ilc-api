@@ -12,6 +12,3 @@ Start the server :
 ```command line
 npm start
 ```
-
-
-Then open: localhost:1903
